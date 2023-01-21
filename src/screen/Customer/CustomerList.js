@@ -1,9 +1,11 @@
 import {Button, FlatList, ImageBackground, Text, TouchableOpacity, View} from "react-native";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import useFetchQuery from "../../hooks/useFetchQuery";
 import {getCustomer} from "../../service/customerApi";
 import styles from "./styles";
 import ButtonRounded from "../../components/Button/ButtonRounded";
+import {ButtonAdd} from "../../components/Button/ButtonAdd";
+import AnimatedLottieView from "lottie-react-native";
 
 
 const RendererCustomer = (data) => {
@@ -25,10 +27,11 @@ const RendererCustomer = (data) => {
     )
 }
 
-const CustomerList=()=>{
+const CustomerList=(props)=>{
     const [customers, setCustomers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const {data, loading} = useFetchQuery(getCustomer);
+
 
     const onChangeData = () => {
         const newCustomers = data?.data || [];
@@ -59,6 +62,7 @@ const CustomerList=()=>{
             <View
                 style={{backgroundColor: 'rgba(0,0,0,0.3)', flex: 1}}
             >
+                {loading && <AnimatedLottieView source={require("../../../assets/loading-animate.json")} autoPlay loop/>}
                 <FlatList
                     style={{marginTop: 40}}
                     data={customers}
@@ -67,6 +71,12 @@ const CustomerList=()=>{
                     onEndReached={onChangeCurrentPage}
                     refreshing={loading}
                 />
+                <View style={{height:75}}>
+
+                </View>
+                <View style={{right:15, bottom:100,position:"absolute"}}>
+                    <ButtonAdd label={"add"} onPress={()=>{}} disable={false}/>
+                </View>
             </View>
         </ImageBackground>
     )

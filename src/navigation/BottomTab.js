@@ -1,14 +1,14 @@
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import MenuList from "../screen/MenuList/MenuList";
 import TableList from "../screen/TableList/TableList";
 import CustomerList from "../screen/Customer/CustomerList";
 import Icon from "../components/Icon";
 import Logout from "../screen/Logout/Logout";
+import {MenuStack} from "./MenuStack";
 
 const Tab = createBottomTabNavigator();
 
 const FORM_LIST = [
-    {name: "MenuList", component:MenuList, icon:"fast-food"},
+    {name: "MenuStack", component:MenuStack, icon:"fast-food"},
     {name: "TableList", component:TableList, icon:"file-tray"},
     {name: "CustomerList", component: CustomerList, icon:"people-circle"},
     {name: "Logout", component:Logout, icon:"log-out"},
@@ -35,6 +35,7 @@ const BottomTab = () => {
             {FORM_LIST.map((item)=>(
                 <Tab.Screen name={item.name}
                             component={item.component}
+                            key={item.name}
                             options={{
                                 tabBarIconStyle: {
                                     marginTop: 5

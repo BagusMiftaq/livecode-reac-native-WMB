@@ -4,12 +4,12 @@ export default StyleSheet.create({
     container:{
         padding: 5,
     },
-    buttonOk:{
+    buttonOk:(color)=>({
         borderRadius: 10,
-        backgroundColor:"#FF5111",
+        backgroundColor:color,
         margin:5,
         padding:15,
-    },
+    }),
     text:{
         fontWeight:"bold",
         color:"white",
@@ -27,5 +27,16 @@ export default StyleSheet.create({
         backgroundColor:color,
         paddingVertical:15,
         paddingHorizontal:20,
+    }),
+    buttonAdd:(color)=>({
+        borderRadius: 50,
+        backgroundColor:color,
+        paddingVertical:5,
+        paddingHorizontal:5,
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity:1,
+        shadowRadius: 5,
+        elevation: 3,
     }),
 })

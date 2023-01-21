@@ -12,6 +12,9 @@ const Login =(props)=>{
         props.navigation.navigate("Main");
     }
 
+    const fillRequierement =()=>{
+    }
+
     return(
         <KeyboardAvoidingView style={styles.container}>
             <ImageBackground
