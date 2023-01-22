@@ -62,7 +62,6 @@ const CustomerList=(props)=>{
     }, [props.route.params])
 
     const onDelete = (id, name) => {
-        console.log("id", id)
 
         Alert.alert('Delete Customer', 'Are u sure u want to delete ' + name + " ?", [
             {
@@ -71,7 +70,6 @@ const CustomerList=(props)=>{
             },
             {
                 text: 'Delete', onPress: async () => {
-                    console.log(id)
                     await delCustomer(id)
                     Alert.alert('Delete Customer', name + ' is Deleted', [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},

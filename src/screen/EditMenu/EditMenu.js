@@ -15,7 +15,6 @@ const EditMenu = (props) =>{
     const [price, setPrice] = useState(item.price);
     const {fetchMutation: updateMutation, loading, error} = useFetchMutation(updateMenu, ()=>props.navigation.navigate("MenuList"))
 
-    // console.log("edit",props)
     const submitHandler = async () => {
         const payload = {
             id: id,
@@ -24,7 +23,6 @@ const EditMenu = (props) =>{
         };
 
         await updateMutation(payload);
-        console.log("update payload", payload);
         if (!error) {
             props.navigation.navigate("MenuList", {
                 updateMenu: payload

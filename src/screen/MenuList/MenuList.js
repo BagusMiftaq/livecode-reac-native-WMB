@@ -44,7 +44,6 @@ const MenuList = (props) => {
     const {data, loading, error, refetch} = useFetchQuery(getMenus);
     const {fetchMutation: delMenus} = useFetchMutation(deleteMenu);
 
-    console.log(props.route.params)
 
     useEffect(() => {
         if (props.route.params?.newMenu) {
@@ -56,7 +55,6 @@ const MenuList = (props) => {
             ]))
         }
         if (props.route.params?.updateMenu) {
-            console.log("a", props.route.params?.updateMenu)
             const updateMenu = props.route.params?.updateMenu;
             const index = menus.findIndex((menu) => menu.id === updateMenu.id);
 
@@ -64,16 +62,11 @@ const MenuList = (props) => {
 
             copyMenu[index] = updateMenu;
 
-            console.log(copyMenu[index])
-
-            console.log(copyMenu)
-
             setMenus(copyMenu)
         }
     }, [props.route.params])
 
     const onDelete = (id, name) => {
-        console.log("id", id)
 
         Alert.alert('Delete Menu', 'Are u sure u want to delete ' + name + " ?", [
             {
@@ -82,7 +75,6 @@ const MenuList = (props) => {
             },
             {
                 text: 'Delete', onPress: async () => {
-                    console.log(id)
                     await delMenus(id)
                     Alert.alert('Delete Menu', name + ' is Deleted', [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
