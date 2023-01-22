@@ -22,5 +22,5 @@ export const updateMenu = (menu) => {
     return api.put("/menus/", menu);
 }
 export const deleteMenu = (id) => {
-    return api.delete("/menus/:"+id);
+    return api.delete("/menus/"+id);
 }

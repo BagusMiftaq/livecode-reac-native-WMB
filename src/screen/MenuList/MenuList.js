@@ -81,7 +81,8 @@ const MenuList = (props) => {
                 style: 'cancel',
             },
             {
-                text: 'Delete', onPress: async (id) => {
+                text: 'Delete', onPress: async () => {
+                    console.log(id)
                     await delMenus(id)
                     Alert.alert('Delete Menu', name + ' is Deleted', [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
