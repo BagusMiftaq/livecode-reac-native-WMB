@@ -27,7 +27,7 @@ const EditMenu = (props) =>{
         console.log("update payload", payload);
         if (!error) {
             props.navigation.navigate("MenuList", {
-                newMenu: payload
+                updateMenu: payload
             })
         }
     }

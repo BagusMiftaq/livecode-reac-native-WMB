@@ -1,16 +1,22 @@
 import {Image, Text, View} from "react-native";
 import styles from "./styles";
 import {useEffect} from "react";
+import {getToken} from "../../utils/token";
 
 const Splash=(props)=>{
 
-    const onNavigate= ()=>{
-        props.navigation.navigate("Auth");
+    const onNavigate= async ()=>{
+        const token = await getToken();
+        if (token){
+            props.navigation.navigate("Main")
+        } else {
+            props.navigation.navigate("Auth")
+        }
     }
 
-    useEffect(()=>{
-        setTimeout(()=>{
-            onNavigate();
+    useEffect( ()=>{
+        setTimeout(async ()=>{
+            await onNavigate();
         }, 3000)
     }, [])
 

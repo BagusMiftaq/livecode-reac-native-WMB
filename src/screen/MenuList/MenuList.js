@@ -14,8 +14,7 @@ import useFetchMutation from "../../hooks/useFetchMutation";
 const RendererMenu = (props) => {
     const {data, navigation, onDelete} = props
 
-
-    const onUpdate =()=>{
+    const onUpdate = () => {
         navigation.navigate("EditMenu", {
             data: data
         })
@@ -30,8 +29,9 @@ const RendererMenu = (props) => {
                 </View>
                 <View>
                     <View style={{flexDirection: "row", justifyContent: "flex-end"}}>
-                        <ButtonRounded label={"create"} onPress={() => onUpdate} disable={false}/>
-                        <ButtonRounded label={"trash"} onPress={() => onDelete(data.item.id, data.item.name)} disable={false}/>
+                        <ButtonRounded label={"create"} onPress={() => onUpdate()} disable={false}/>
+                        <ButtonRounded label={"trash"} onPress={() => onDelete(data.item.id, data.item.name)}
+                                       disable={false}/>
                     </View>
                 </View>
             </View>
@@ -41,36 +41,62 @@ const RendererMenu = (props) => {
 
 const MenuList = (props) => {
     const [menus, setMenus] = useState([]);
-    const {data, loading, error} = useFetchQuery(getMenus);
+    const {data, loading, error, refetch} = useFetchQuery(getMenus);
     const {fetchMutation: delMenus} = useFetchMutation(deleteMenu);
 
-    const onChangeData = () => {
-        const newMenus = data?.data || [];
+    console.log(props.route.params)
 
-        setMenus(newMenus)
-    }
+    useEffect(() => {
+        if (props.route.params?.newMenu) {
+            const newMenu = props.route.params?.newMenu;
 
-    const onDelete= (id, name)=>{
+            setMenus((prevState) => ([
+                ...prevState,
+                newMenu
+            ]))
+        }
+        if (props.route.params?.updateMenu) {
+            console.log("a", props.route.params?.updateMenu)
+            const updateMenu = props.route.params?.updateMenu;
+            const index = menus.findIndex((menu) => menu.id === updateMenu.id);
+
+            const copyMenu = menus;
+
+            copyMenu[index] = updateMenu;
+
+            console.log(copyMenu[index])
+
+            console.log(copyMenu)
+
+            setMenus(copyMenu)
+        }
+    }, [props.route.params])
+
+    const onDelete = (id, name) => {
         console.log("id", id)
 
-        Alert.alert('Delete Menu', 'Are u sure u want to delete '+name+" ?", [
+        Alert.alert('Delete Menu', 'Are u sure u want to delete ' + name + " ?", [
             {
                 text: 'Cancel',
                 style: 'cancel',
             },
-            {text: 'Delete', onPress: async (id) => {
+            {
+                text: 'Delete', onPress: async (id) => {
                     await delMenus(id)
                     Alert.alert('Delete Menu', name + ' is Deleted', [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ]);
-                }},
+                }
+            },
         ]);
 
     }
 
     useEffect(() => {
-        if (menus !== data.data) {
-            onChangeData()
+        if (data.data === undefined) {
+            refetch();
+        } else {
+            setMenus(data?.data);
         }
     }, [data.data])
 
@@ -89,18 +115,16 @@ const MenuList = (props) => {
             <View
                 style={{backgroundColor: 'rgba(0,0,0,0.3)', flex: 1}}
             >
-                {loading ? (<AnimatedLottieView source={require("../../../assets/loading-animate.json")} autoPlay loop/>)
-                    : <View>
-                        <FlatList
-                            style={{marginTop: 40}}
-                            data={menus}
-                            renderItem={(data)=> <RendererMenu data={data} navigation={props.navigation} onDelete={onDelete} />}
-                            keyExtractor={(data) => data.id}
-                            onEndReached={onChangeData}
-                        />
-                    </View>}
-
-                <View style={{height:75}}>
+                {loading &&
+                    <AnimatedLottieView source={require("../../../assets/loading-animate.json")} autoPlay loop/>}
+                <FlatList
+                    style={{marginTop: 40}}
+                    data={menus}
+                    renderItem={(data) => <RendererMenu data={data} navigation={props.navigation}
+                                                        onDelete={onDelete}/>}
+                    keyExtractor={(data) => data.id}
+                />
+                <View style={{height: 80}}>
 
                 </View>
                 <View style={{right: 15, bottom: 100, position: "absolute"}}>
