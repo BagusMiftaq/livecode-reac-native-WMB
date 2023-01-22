@@ -1,12 +1,22 @@
-import {Button, FlatList, ImageBackground, Text, TouchableOpacity, View} from "react-native";
-import {useEffect, useState} from "react";
+import {Alert, Button, FlatList, ImageBackground, Text, TouchableOpacity, View} from "react-native";
+import React, {useEffect, useState} from "react";
 import useFetchQuery from "../../hooks/useFetchQuery";
-import {getCustomer} from "../../service/customerApi";
+import {deleteCustomer, getCustomer} from "../../service/customerApi";
 import styles from "./styles";
 import ButtonRounded from "../../components/Button/ButtonRounded";
+import {ButtonAdd} from "../../components/Button/ButtonAdd";
+import AnimatedLottieView from "lottie-react-native";
+import useFetchMutation from "../../hooks/useFetchMutation";
 
 
-const RendererCustomer = (data) => {
+const RendererCustomer = (props) => {
+    const {data, navigation, onDelete} = props
+
+    const onUpdate = () => {
+        navigation.navigate("EditCustomer", {
+            data: data
+        })
+    }
 
     return (
         <TouchableOpacity activeOpacity={0.8} style={styles.list}>
@@ -17,36 +27,70 @@ const RendererCustomer = (data) => {
                     <Text style={styles.desc}>Address :   {data.item.alamat}</Text>
                 </View>
                 <View style={{flexDirection:"row", justifyContent:"flex-end"}}>
-                    <ButtonRounded label={"create"} onPress={()=>{}} disable={false}/>
-                    <ButtonRounded label={"trash"} onPress={()=>{}} disable={false}/>
+                    <ButtonRounded label={"create"} onPress={()=>onUpdate()} disable={false}/>
+                    <ButtonRounded label={"trash"} onPress={()=>onDelete(data.item.id, data.item.nama)} disable={false}/>
                 </View>
             </View>
         </TouchableOpacity>
     )
 }
 
-const CustomerList=()=>{
+const CustomerList=(props)=>{
     const [customers, setCustomers] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const {data, loading} = useFetchQuery(getCustomer);
+    const {data, loading, refetch} = useFetchQuery(getCustomer);
+    const {fetchMutation: delCustomer} = useFetchMutation(deleteCustomer)
 
-    const onChangeData = () => {
-        const newCustomers = data?.data || [];
+    useEffect(() => {
+        if (props.route.params?.newCustomer) {
+            const newCustomer = props.route.params?.newCustomer;
 
-        setCustomers(newCustomers);
+            setCustomers((prevState) => ([
+                ...prevState,
+                newCustomer
+            ]))
+        }
+        if (props.route.params?.updateCustomer) {
+            const updateCustomer = props.route.params?.updateCustomer;
+            const index = customers.findIndex((customer) => customer.id === updateCustomer.id);
+
+            const copyCustomer = customers;
+
+            copyCustomer[index] = updateCustomer;
+
+            setCustomers(copyCustomer)
+        }
+    }, [props.route.params])
+
+    const onDelete = (id, name) => {
+
+        Alert.alert('Delete Customer', 'Are u sure u want to delete ' + name + " ?", [
+            {
+                text: 'Cancel',
+                style: 'cancel',
+            },
+            {
+                text: 'Delete', onPress: async () => {
+                    await delCustomer(id)
+                    Alert.alert('Delete Customer', name + ' is Deleted', [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ]);
+                }
+            },
+        ]);
+
     }
 
-    const onChangeCurrentPage = () => {
-        if (currentPage !== data?.data.length) {
-            setCurrentPage((prevState) => prevState + 1);
+    useEffect(() => {
+        if (data.data === undefined) {
+            refetch();
+        } else {
+            setCustomers(data?.data);
         }
-    }
+    }, [data.data])
 
-    useEffect(()=>{
-        if (customers!==data.data){
-            onChangeData()
-        }
-    },[data.data])
+    const onAdd = () => {
+        props.navigation.navigate("AddCustomer");
+    }
 
     return (
 
@@ -59,14 +103,20 @@ const CustomerList=()=>{
             <View
                 style={{backgroundColor: 'rgba(0,0,0,0.3)', flex: 1}}
             >
+                {loading && <AnimatedLottieView source={require("../../../assets/loading-animate.json")} autoPlay loop/>}
                 <FlatList
                     style={{marginTop: 40}}
                     data={customers}
-                    renderItem={RendererCustomer}
+                    renderItem={(data)=><RendererCustomer data={data} navigation={props.navigation}
+                                                      onDelete={onDelete}/>}
                     keyExtractor={(data) => data.id}
-                    onEndReached={onChangeCurrentPage}
-                    refreshing={loading}
                 />
+                <View style={{height:75}}>
+
+                </View>
+                <View style={{right:15, bottom:100,position:"absolute"}}>
+                    <ButtonAdd label={"add"} onPress={onAdd} disable={false}/>
+                </View>
             </View>
         </ImageBackground>
     )

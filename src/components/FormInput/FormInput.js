@@ -12,6 +12,8 @@ const FormInput=(props)=>{
                 onChangeText={props.onChange}
                 keyboardType={props.type}
                 secureTextEntry={props.secureTextEntry}
+                editable={!props.disable}
+                onBlur={props.onBlur}
             />
         </View>
     )

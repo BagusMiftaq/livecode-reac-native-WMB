@@ -2,11 +2,25 @@ import {ImageBackground, Text, View} from "react-native";
 import ButtonOk from "../../components/Button/ButtonOk";
 import styles from "./styles";
 import ButtonCancel from "../../components/Button/ButtonCancel";
+import useFetchMutation from "../../hooks/useFetchMutation";
+import {login, logout} from "../../service/authApi";
+import {removeToken} from "../../utils/token";
+import AnimatedLottieView from "lottie-react-native";
 
 const Logout=(props)=>{
 
-    const onLogout=()=>{
-        props.navigation.navigate("Login")
+    const onSuccess = async () =>{
+        await removeToken();
+        props.navigation.navigate("Auth")
+    }
+
+    const {fetchMutation: logoutMutation, loading} = useFetchMutation(
+        logout,
+        onSuccess
+    );
+
+    const onLogout= async ()=>{
+        await logoutMutation();
     }
 
     return(
@@ -19,6 +33,7 @@ const Logout=(props)=>{
             <View
                 style={{backgroundColor: 'rgba(0, 0, 0,0.5)', flex: 1}}
             >
+                {loading && <AnimatedLottieView source={require("../../../assets/loading-animate.json")} autoPlay loop/>}
                 <View style={styles.container}>
                     <ButtonCancel
                         label={"LOGOUT"} onPress={onLogout}
