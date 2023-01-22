@@ -17,6 +17,7 @@ const FORM_LIST = [
 const BottomTab = () => {
     return (
         <Tab.Navigator screenOptions={{
+            tabBarHideOnKeyboard: true,
             tabBarLabel: () => null,
             headerShown: false,
             tabBarStyle: {
