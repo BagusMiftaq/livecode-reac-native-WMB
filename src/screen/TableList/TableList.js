@@ -65,7 +65,7 @@ const TableList = (props) => {
     }, [props.route.params])
 
     const onDelete = (id, nomor) => {
-        Alert.alert('Delete Table', 'Are u sure u want to delete table ' + name + " ?", [
+        Alert.alert('Delete Table', 'Are u sure u want to delete table ' + nomor+ " ?", [
             {
                 text: 'Cancel',
                 style: 'cancel',
