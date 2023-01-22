@@ -1,16 +1,16 @@
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import CustomerList from "../screen/Customer/CustomerList";
 import Icon from "../components/Icon";
 import Logout from "../screen/Logout/Logout";
 import {MenuStack} from "./MenuStack";
 import TableStack from "./TableStack";
+import CustomerStack from "./CustomerStack";
 
 const Tab = createBottomTabNavigator();
 
 const FORM_LIST = [
     {name: "MenuStack", component:MenuStack, icon:"fast-food"},
     {name: "TableStack", component:TableStack, icon:"file-tray"},
-    {name: "CustomerList", component: CustomerList, icon:"people-circle"},
+    {name: "CustomerStack", component: CustomerStack, icon:"people-circle"},
     {name: "Logout", component:Logout, icon:"log-out"},
 ]
 
